@@ -31,16 +31,16 @@ jobs:
     defaults:
       run:
         working-directory: backend
-      steps:
-        - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Set up Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: "3.9.11"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9.11"
 
-        - name: Install dependencies
-          run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-        - name: Run Pytest
-          run: pytest
+      - name: Run Pytest
+        run: pytest
