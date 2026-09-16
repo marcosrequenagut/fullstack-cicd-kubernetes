@@ -3,3 +3,6 @@ uvicorn
 pytest
 httpx
 ruff
+pandas
+sqlalchemy
+psycopg2-binary
