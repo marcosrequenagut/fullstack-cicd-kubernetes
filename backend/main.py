@@ -1,6 +1,7 @@
-from fastapi import FastAPI
-from db_connection import engine
 import pandas as pd
+from fastapi import FastAPI
+
+from db_connection import engine
 
 app = FastAPI()
 
