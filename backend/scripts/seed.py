@@ -1,4 +1,5 @@
 import pandas as pd
+
 from db_connection import engine
 
 df = pd.read_csv("data/olist_order_items_dataset.csv")
