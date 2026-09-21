@@ -84,6 +84,12 @@ logs/
 docker-compose.override.yml
 
 # =========================
+# Kubernetes
+# =========================
+
+secret.yml
+
+# =========================
 # Temporary files
 # =========================
 

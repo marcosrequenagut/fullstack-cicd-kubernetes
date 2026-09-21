@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run ruff
+        run: ruff check .
+
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: postgresql://user:pass@localhost:5432/testdb
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Pytest
+        run: pytest
+  
+  deploy:
+    runs-on: self-hosted
+    needs: [lint, test]
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set namespace
+        shell: powershell
+        run: |
+          if ("${{ github.ref_name }}" -eq "main") {
+            echo "NAMESPACE=prod" >> $env:GITHUB_ENV
+          } else {
+            echo "NAMESPACE=dev" >> $env:GITHUB_ENV
+          }
+
+      - name: Build backend image
+        shell: powershell
+        run: |
+          & minikube -p minikube docker-env --shell powershell | Invoke-Expression
+          docker build -t backend:latest ./backend
+
+      - name: Apply Kubernetes manifests
+        shell: powershell
+        run: kubectl apply -f k8s/$env:NAMESPACE/
+
+      - name: Restart backend to pick up new image
+        shell: powershell
+        run: kubectl rollout restart deployment/backend -n $env:NAMESPACE
