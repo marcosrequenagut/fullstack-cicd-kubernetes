@@ -1,7 +1,8 @@
 import pandas as pd
-from db_connection import engine
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from db_connection import engine
 
 app = FastAPI()
 app.add_middleware(
