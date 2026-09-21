@@ -21,3 +21,71 @@ Docker Desktop (tu Docker normal)
               │
               ├── Pod postgres   ← contenedor real, corriendo aquí dentro
               └── Pod backend    ← contenedor real, corriendo aquí dentro
+
+Workflow cuando hago un push en Github
+
+ git push
+                       │
+                       ▼
+              ┌─────────────────┐
+              │ lint + test      │
+              └────────┬────────┘
+                       │
+                  ¿Todo OK?
+                       │
+                       ▼
+             ┌───────────────────┐
+             │ Detectar branch   │
+             └─────────┬─────────┘
+                       │
+             ┌─────────┴─────────┐
+             │                   │
+          main                otra rama
+             │                   │
+             ▼                   ▼
+           prod                 dev
+             │                   │
+             └─────────┬─────────┘
+                       ▼
+              minikube docker-env
+                       │
+                       ▼
+              docker build
+              backend:latest
+                       │
+                       ▼
+               kubectl apply
+                       │
+                       ▼
+             rollout restart
+                       │
+                       ▼
+                 🚀 Backend
+
+Para ejecutar la API hay que tener esto en una terminal funcionando: $ kubectl port-forward -n ingress-nginx svc/ingress-nginx-controller 80:80
+
+Y seguramente hacer el procedimiento quee viene en github que he creado en otro proyecto independiente en la termianl esto ultimo no estoy seguero
+
+
+Desde que el usuario hace una peticion hasta que llega a la api al backend pasa esto:
+
+🌍 Usuario / navegador
+        │
+        │ GET https://miapp.com/api/users
+        ▼
+┌─────────────────┐
+│     INGRESS     │  ← puerta de entrada HTTP/HTTPS
+└────────┬────────┘
+         │
+         │ regla: /api → backend-service
+         ▼
+┌─────────────────┐
+│    SERVICE      │  ← dirección estable
+│ backend-service │
+└────────┬────────┘
+         │
+         ▼
+   ┌───────────┐
+   │ Pod       │
+   │ FastAPI   │
+   └───────────┘
