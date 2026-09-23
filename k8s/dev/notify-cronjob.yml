@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: notify-reservation
+  namespace: dev
+spec:
+  schedule: "0 11 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: notify-reservations
+              image: backend:latest
+              imagePullPolicy: Never
+              command: ["python", "-m", "scripts.notify_reservations"]
+              envFrom:
+                - secretRef:
+                    name: postgres-secret
+                - secretRef:
+                    name: telegram-secret
+          restartPolicy: OnFailure

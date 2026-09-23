@@ -6,3 +6,6 @@ ruff
 pandas
 sqlalchemy
 psycopg2-binary
+pydantic[email]
+python-dotenv
+requests
