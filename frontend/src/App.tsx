@@ -14,7 +14,7 @@ function App() {
   const[items, setItems] = useState<OrderItem[]>([])
 
   useEffect(() => {
-    fetch('http://dev.miproyecto.local/api/order-items')
+    fetch('/api/order-items')
     .then((response) => response.json())
     .then((data) => setItems(data))
   }, [])

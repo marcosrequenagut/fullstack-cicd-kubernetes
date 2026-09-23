@@ -20,5 +20,7 @@ spec:
           envFrom:
             - secretRef:
                 name: postgres-secret
+            - secretRef:
+                name: telegram-secret
           ports:
             - containerPort: 8000
