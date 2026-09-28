@@ -76,8 +76,20 @@ def create_reservation(reservation: ReservationCreate, db: Session = Depends(get
         f"Start Time: {db_reservation.start_time}\n"
         f"End Time: {db_reservation.end_time}"
     )
-    
+
     return db_reservation
+
+
+@app.get("/players", response_model=list[PlayerOut])
+def get_players(db: Session = Depends(get_db)):
+    players = db.query(Players).all()
+    return players
+
+
+@app.get("/courts", response_model = list[CourtOut])
+def get_courts(db: Session = Depends(get_db)):
+    courts = db.query(Courts).all()
+    return courts
 
 
 @app.get("/reservations", response_model=list[ReservationOut])
