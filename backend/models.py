@@ -33,4 +33,4 @@ class Reservations(Base):
     date_of_reservation: Mapped[date] = mapped_column(Date, nullable=False)
     start_time: Mapped[time] = mapped_column(Time, nullable=False)
     end_time: Mapped[time] = mapped_column(Time, nullable=False)
-    notified: Mapped[bool] = mapped_column(Boolean, default = True, nullable = False)
+    notified: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

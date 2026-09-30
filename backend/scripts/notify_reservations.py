@@ -13,13 +13,17 @@ URL = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
 db = SessionLocal()
 
 try:
-    today = datetime.now() 
+    today = datetime.now()
     tomorrow = today + timedelta(days=1)
 
-    reservations = db.query(Reservations).filter(
-        Reservations.date_of_reservation.between(today, tomorrow),
-        Reservations.notified == False
-    ).all()
+    reservations = (
+        db.query(Reservations)
+        .filter(
+            Reservations.date_of_reservation.between(today, tomorrow),
+            Reservations.notified == False,
+        )
+        .all()
+    )
 
     for reservation in reservations:
         send_telegram_message(

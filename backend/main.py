@@ -19,7 +19,12 @@ from telegram_notifier import send_telegram_message
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:8080"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175",
+        "http://localhost:8080",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -64,7 +69,7 @@ def create_reservation(reservation: ReservationCreate, db: Session = Depends(get
         player_id=reservation.player_id,
         date_of_reservation=reservation.date_of_reservation,
         start_time=reservation.start_time,
-        end_time=reservation.end_time
+        end_time=reservation.end_time,
     )
     db.add(db_reservation)
     db.commit()
@@ -76,8 +81,20 @@ def create_reservation(reservation: ReservationCreate, db: Session = Depends(get
         f"Start Time: {db_reservation.start_time}\n"
         f"End Time: {db_reservation.end_time}"
     )
-    
+
     return db_reservation
+
+
+@app.get("/players", response_model=list[PlayerOut])
+def get_players(db: Session = Depends(get_db)):
+    players = db.query(Players).all()
+    return players
+
+
+@app.get("/courts", response_model=list[CourtOut])
+def get_courts(db: Session = Depends(get_db)):
+    courts = db.query(Courts).all()
+    return courts
 
 
 @app.get("/reservations", response_model=list[ReservationOut])
