@@ -11,6 +11,7 @@ class CourtOut(CourtCreate):
     id: int
     model_config = {"from_attributes": True}
 
+
 class PlayerCreate(BaseModel):
     name: str
     surname: str
